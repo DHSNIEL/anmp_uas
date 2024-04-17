@@ -1,60 +1,103 @@
 package com.jubaya.myarchive.view
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.jubaya.myarchive.R
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.jubaya.myarchive.databinding.FragmentProfileBinding
+import com.jubaya.myarchive.model.Global
+import com.jubaya.myarchive.viewmodel.ProfileViewModel
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding:FragmentProfileBinding
+    private lateinit var viewModel:ProfileViewModel
+    var message = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+        viewModel.refresh(Global.userid.toString())
+
+        observeViewModel()
+
+        binding.btnLogOut.setOnClickListener {
+            goToLoginPage()
+        }
+    }
+
+    fun observeViewModel(){
+        viewModel.userLD.observe(viewLifecycleOwner, Observer {
+            var user = it
+
+            binding.txtFirst.setText(it.firstname)
+            binding.txtLast.setText(it.lastname)
+            binding.txtEmail.setText(it.email)
+            binding.txtUsername.setText(it.username)
+
+            binding.btnUpdate.setOnClickListener {
+                viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+                viewModel.update(Global.userid.toString(), binding.txtFirst.text.toString(),
+                    binding.txtLast.text.toString(), binding.txtNewPass.text.toString())
+
+                observeUpdateViewModel()
+            }
+
+            val picasso = Picasso.Builder(requireContext())
+            picasso.listener { picasso, uri, exception ->
+                exception.printStackTrace()
+            }
+            picasso.build().load(it.img_url).into(binding.imgProfile, object:
+                Callback {
+                override fun onSuccess() {
+                    //binding.progressImage.visibility = View.INVISIBLE
+                    binding.imgProfile.visibility = View.VISIBLE
+                }
+
+                override fun onError(e: Exception?) {
+                    Log.e("picasso_error", e.toString())
                 }
             }
+            )
+
+        })
+    }
+
+    fun observeUpdateViewModel(){
+        viewModel.updateLD.observe(viewLifecycleOwner, Observer {
+            message = it
+
+            Log.d("Msg", message)
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        })
+    }
+
+    fun goToLoginPage() {
+        Global.userid = 0
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        requireActivity().finish()
     }
 }

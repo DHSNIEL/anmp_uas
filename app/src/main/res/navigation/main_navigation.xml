@@ -8,11 +8,11 @@
     <fragment
         android:id="@+id/iconHome"
         android:name="com.jubaya.myarchive.view.HomeFragment"
-        android:label="fragment_home"
+        android:label="My Archive"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/iconProfile"
         android:name="com.jubaya.myarchive.view.ProfileFragment"
-        android:label="fragment_profile"
+        android:label="My Archive"
         tools:layout="@layout/fragment_profile" />
 </navigation>

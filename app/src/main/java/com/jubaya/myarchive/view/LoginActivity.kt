@@ -5,16 +5,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.jubaya.myarchive.R
 import com.jubaya.myarchive.databinding.ActivityLoginBinding
 import com.jubaya.myarchive.model.Global
+import com.jubaya.myarchive.viewmodel.LoginViewModel
+import com.jubaya.myarchive.viewmodel.ProfileViewModel
 import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding:ActivityLoginBinding
+    private lateinit var viewModel: LoginViewModel
     var user_id = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,37 +37,32 @@ class LoginActivity : AppCompatActivity() {
             //Log.d("username", binding.txtUsername.text.toString())
             //Log.d("pass", binding.txtPass.text.toString())
 
-            val q = Volley.newRequestQueue(this)
-            val url = "https://anmpprojects.000webhostapp.com/login.php"
-            val stringRequest = object: StringRequest(
-                Request.Method.POST, url,
-                {
-                    val obj = JSONObject(it)
-                    if(obj.getString("result") == "OK") {
-                        user_id = obj.getInt("data")
+            if (binding.txtUsername.text.toString() != "" && binding.txtPass.text.toString() != ""){
 
-                        Log.d("apiresult", user_id.toString())
-                        Toast.makeText( this,"Welcome, " + binding.txtUsername.text, Toast.LENGTH_LONG).show()
-                        updateList()
-                        finish()
-                    }
-                    else{
-                        Toast.makeText( this, obj.getString("message"), Toast.LENGTH_LONG).show()
-                    }
-                },
-                {
-                    Log.e("apierror", it.printStackTrace().toString())
-                }
-            ){
-                override fun getParams(): MutableMap<String, String>? {
-                    val params = HashMap<String, String>()
-                    params["username"] = binding.txtUsername.text.toString()
-                    params["password"] = binding.txtPass.text.toString()
-                    return params
-                }
+                viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+                viewModel.login(binding.txtUsername.text.toString(), binding.txtPass.text.toString())
+
+                observeViewModel()
+
             }
-            q.add(stringRequest)
+            else{
+                Toast.makeText(this, "Please Fill All The Field", Toast.LENGTH_LONG).show()
+            }
         }
+    }
+
+    fun observeViewModel(){
+        viewModel.loginidLD.observe(this, Observer {
+            user_id = it
+
+            Log.d("ID", user_id.toString())
+            if (user_id != 0){
+                Toast.makeText( this,"Welcome, " + binding.txtUsername.text, Toast.LENGTH_LONG).show()
+                updateList()
+            } else {
+                Toast.makeText( this,"Login Failed. Username or Password is incorrect", Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
     fun updateList() {

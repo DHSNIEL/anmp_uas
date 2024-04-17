@@ -23,7 +23,7 @@
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="64dp"
                 android:fontFamily="@font/rammetto_one"
                 android:text="Astral Express"
                 android:textSize="30sp"
@@ -35,7 +35,7 @@
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="112dp"
+                android:layout_marginTop="96dp"
                 android:fontFamily="@font/aclonica"
                 android:text="Location Archive"
                 android:textSize="25sp"
@@ -198,23 +198,29 @@
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/castoro"
                 android:text="Already have an Account?"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.4"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnReg" />
+                app:layout_constraintTop_toBottomOf="@+id/btnReg"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/txtLog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/castoro"
                 android:text="Login"
                 android:textColor="#0E46A3"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView6"
-                app:layout_constraintTop_toBottomOf="@+id/btnReg" />
+                app:layout_constraintTop_toBottomOf="@+id/btnReg"
+                app:layout_constraintVertical_bias="0.00999999" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
