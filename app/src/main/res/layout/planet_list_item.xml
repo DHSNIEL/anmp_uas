@@ -8,9 +8,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
         app:cardCornerRadius="10dp"
         app:cardElevation="15dp"
@@ -35,12 +35,15 @@
 
             <TextView
                 android:id="@+id/txtName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:fontFamily="@font/rammetto_one"
                 android:text="TextView"
-                android:textSize="25sp"
+                android:textAlignment="viewStart"
+                android:textSize="19sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imgPlanet" />
 
@@ -49,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:fontFamily="@font/aclonica"
+                android:fontFamily="@font/alike_angular"
                 android:text="TextView"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -118,6 +121,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtDetail" />
+
+            <ProgressBar
+                android:id="@+id/progressImage"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/imgPlanet"
+                app:layout_constraintEnd_toEndOf="@+id/imgPlanet"
+                app:layout_constraintStart_toStartOf="@+id/imgPlanet"
+                app:layout_constraintTop_toTopOf="@+id/imgPlanet" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

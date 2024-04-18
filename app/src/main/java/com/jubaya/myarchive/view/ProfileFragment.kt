@@ -71,7 +71,7 @@ class ProfileFragment : Fragment() {
             picasso.build().load(it.img_url).into(binding.imgProfile, object:
                 Callback {
                 override fun onSuccess() {
-                    //binding.progressImage.visibility = View.INVISIBLE
+                    binding.progressImage.visibility = View.INVISIBLE
                     binding.imgProfile.visibility = View.VISIBLE
                 }
 
