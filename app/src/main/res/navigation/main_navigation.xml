@@ -9,10 +9,23 @@
         android:id="@+id/iconHome"
         android:name="com.jubaya.myarchive.view.HomeFragment"
         android:label="My Archive"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/actionHometoDetail"
+            app:destination="@id/planetDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/iconProfile"
         android:name="com.jubaya.myarchive.view.ProfileFragment"
         android:label="My Archive"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/planetDetailFragment"
+        android:name="com.jubaya.myarchive.view.PlanetDetailFragment"
+        android:label="fragment_planet_detail"
+        tools:layout="@layout/fragment_planet_detail" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
 </navigation>

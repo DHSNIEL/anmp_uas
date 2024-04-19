@@ -19,13 +19,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        navController = (supportFragmentManager.findFragmentById(R.id.navHost)
-                as NavHostFragment).navController
+        navController = (supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment).navController
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = "My Archive"
+
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
 
         NavigationUI.setupWithNavController(binding.navView, navController)
 
         binding.bottomNav.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            supportActionBar?.title = destination.label
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

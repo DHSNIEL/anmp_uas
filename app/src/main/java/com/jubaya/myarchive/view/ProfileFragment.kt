@@ -10,9 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.jubaya.myarchive.R
 import com.jubaya.myarchive.databinding.FragmentProfileBinding
 import com.jubaya.myarchive.model.Global
 import com.jubaya.myarchive.viewmodel.ProfileViewModel
@@ -40,6 +43,16 @@ class ProfileFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         viewModel.refresh(Global.userid.toString())
 
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+
+        actionBar?.setDisplayHomeAsUpEnabled(false)
+
+        actionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24)
+
+        actionBar?.setHomeButtonEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24)
+
         observeViewModel()
 
         binding.btnLogOut.setOnClickListener {
@@ -53,8 +66,8 @@ class ProfileFragment : Fragment() {
 
             binding.txtFirst.setText(it.firstname)
             binding.txtLast.setText(it.lastname)
-            binding.txtEmail.setText(it.email)
-            binding.txtUsername.setText(it.username)
+            binding.txtEmail.text = it.email
+            binding.txtUsername.text = it.username
 
             binding.btnUpdate.setOnClickListener {
                 viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)

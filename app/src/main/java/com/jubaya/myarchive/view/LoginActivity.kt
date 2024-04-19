@@ -28,6 +28,11 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = "My Archive"
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         binding.txtReg.setOnClickListener {
             val intent = Intent(it.context, RegisterActivity::class.java)
             it.context.startActivity(intent)

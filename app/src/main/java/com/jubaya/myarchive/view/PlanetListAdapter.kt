@@ -31,6 +31,10 @@ class PlanetListAdapter(val planetList:ArrayList<Planet>)
         holder.binding.txtName.text = planetList[position].name
         holder.binding.txtAuthor.text = "@" + planetList[position].authorname
         holder.binding.txtDetail.text = planetList[position].summary
+        holder.binding.btnRead.setOnClickListener {
+            val action = HomeFragmentDirections.actionHometoDetail(planetList[position].id.toString())
+            Navigation.findNavController(it).navigate(action)
+        }
 
         val picasso = Picasso.Builder(holder.itemView.context)
         picasso.listener { picasso, uri, exception ->
