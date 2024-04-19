@@ -33,7 +33,7 @@ class RegisterViewModel(application: Application): AndroidViewModel(application)
 
                 } else {
 
-                    registerMsgLD.value = "Registration Failed. Please Try AgainOK"
+                    registerMsgLD.value = "Registration Failed. Please Try Again"
 
                 }
             },

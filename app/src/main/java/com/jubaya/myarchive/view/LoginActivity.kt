@@ -73,6 +73,7 @@ class LoginActivity : AppCompatActivity() {
     fun updateList() {
         Global.userid = user_id
         val intent = Intent(this, MainActivity::class.java)
+        finish()
         //intent.putExtra(LoginActivity.idUser, get_id)
         startActivity(intent)
     }
