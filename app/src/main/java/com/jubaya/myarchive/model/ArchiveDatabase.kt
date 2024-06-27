@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.jubaya.myarchive.util.DB_NAME
 import com.jubaya.myarchive.util.MIGRATION_1_2
 
-@Database(entities = arrayOf(ArchiveDatabase::class), version =  2)
+@Database(entities = arrayOf(User::class), version =  2)
 abstract class ArchiveDatabase : RoomDatabase() {
     abstract fun userDao() :UserDao
     abstract fun planetDao() :PlanetDAO
