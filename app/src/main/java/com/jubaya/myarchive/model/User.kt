@@ -15,6 +15,8 @@ data class User(
     var lastname:String?,
     @ColumnInfo(name = "email")
     var email:String?,
+    @ColumnInfo(name = "password")
+    var password:String?,
     @ColumnInfo(name = "img_url")
     var img_url:String?
 ){
