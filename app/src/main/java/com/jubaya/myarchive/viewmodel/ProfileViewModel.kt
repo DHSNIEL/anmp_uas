@@ -11,14 +11,36 @@ import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jubaya.myarchive.model.User
+import com.jubaya.myarchive.util.buildDb
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.Objects
+import kotlin.coroutines.CoroutineContext
 
-class ProfileViewModel(application:Application):AndroidViewModel(application) {
+class ProfileViewModel(application:Application):AndroidViewModel(application), CoroutineScope {
+    private val job = Job()
     val userLD = MutableLiveData<User>()
     val updateLD = MutableLiveData<String>()
 
-    val TAG = "volleyTag"
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
+
+    fun fetch(id:Int) {
+        launch {
+            userLD.postValue(buildDb(getApplication()).userDao().selectUser(id))
+        }
+    }
+
+    fun update(user: User){
+        launch {
+            buildDb(getApplication()).userDao().updateUser(user)
+        }
+    }
+
+    /*val TAG = "volleyTag"
     private var queue: RequestQueue? = null
 
     fun refresh(id:String){
@@ -86,5 +108,5 @@ class ProfileViewModel(application:Application):AndroidViewModel(application) {
     override fun onCleared() {
         super.onCleared()
         queue?.cancelAll(TAG)
-    }
+    }*/
 }

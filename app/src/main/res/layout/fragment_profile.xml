@@ -4,7 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="user"
+            type="com.jubaya.myarchive.model.User" />
+        <variable
+            name="listener"
+            type="com.jubaya.myarchive.view.UserUpdate" />
     </data>
 
     <FrameLayout
@@ -38,7 +43,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/rammetto_one"
-                    android:text="Username"
+                    android:text="@{user.username}"
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +57,7 @@
                     android:layout_marginTop="40dp"
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/enriqueta"
-                    android:text="Email"
+                    android:text="@{user.email}"
                     android:textSize="17sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +80,7 @@
                         android:id="@+id/txtFirst"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@={user.firstname}"
                         android:fontFamily="@font/alike_angular"
                         android:inputType="text|textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -95,6 +101,7 @@
                         android:id="@+id/txtLast"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@={user.lastname}"
                         android:fontFamily="@font/alike_angular"
                         android:inputType="text|textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -150,6 +157,7 @@
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/aclonica"
                     android:text="Update"
+                    android:onClick="@{listener::onUserUpdateClick}"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
