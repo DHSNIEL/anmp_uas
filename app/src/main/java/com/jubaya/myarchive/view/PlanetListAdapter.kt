@@ -20,15 +20,15 @@ class PlanetListAdapter(val planetList:ArrayList<Planet>)
     : RecyclerView.Adapter<PlanetListAdapter.PlanetViewHolder>(), PlanetDetailClickListener {
     class PlanetViewHolder(var binding:PlanetListItemBinding)
         :RecyclerView.ViewHolder(binding.root){
-            fun bind(planet: Planet){
-                binding.planet = planet
-                Picasso.get()
-                    .load(planet.img_url)
-                    .into(binding.imgPlanet)
+        fun bind(planet: Planet){
+            binding.planet = planet
+            Picasso.get()
+                .load(planet.img_url)
+                .into(binding.imgPlanet)
 
-                binding.executePendingBindings()
-            }
+            binding.executePendingBindings()
         }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanetViewHolder {
         val binding = PlanetListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
