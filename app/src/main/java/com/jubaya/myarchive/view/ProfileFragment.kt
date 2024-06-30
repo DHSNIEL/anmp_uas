@@ -116,11 +116,16 @@ class ProfileFragment : Fragment(), UserUpdate {
     }
 
     override fun onUserUpdateClick(v: View) {
-        if (binding.txtNewPass.text.toString() == binding.txtConfPass.text.toString()){
-            if (binding.txtNewPass.text.toString() != ""){
-                binding.user!!.password == binding.txtNewPass.text.toString()
-            }
+        if (binding.txtNewPass.text?.length != null){
+            if (binding.txtNewPass.text.toString() == binding.txtConfPass.text.toString()){
+                binding.user!!.password = binding.txtNewPass.text.toString()
 
+                viewModel.update(binding.user!!)
+                Toast.makeText(context, "Profile Updated!", Toast.LENGTH_SHORT).show()
+            } else{
+                Toast.makeText(context, "New Password and Konf Password are not same!", Toast.LENGTH_SHORT).show()
+            }
+        } else{
             viewModel.update(binding.user!!)
             Toast.makeText(context, "Profile Updated!", Toast.LENGTH_SHORT).show()
         }
