@@ -19,6 +19,7 @@ data class User(
     var password:String?,
     @ColumnInfo(name = "img_url")
     var img_url:String?
+
 ){
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0

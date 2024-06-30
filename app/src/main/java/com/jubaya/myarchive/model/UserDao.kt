@@ -12,10 +12,10 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertAll(vararg user: User)
 
-    @Query("SELECT * FROM users WHERE id= :id")
+    @Query("SELECT * FROM users WHERE id=:id")
     fun selectUser(id:Int): User
 
-    @Query("SELECT * FROM users WHERE email= :email")
+    @Query("SELECT * FROM users WHERE email=:email")
     fun selectCheck(email:String): User
 
     @Update

@@ -7,28 +7,30 @@ import androidx.room.RoomDatabase
 import com.jubaya.myarchive.util.DB_NAME
 import com.jubaya.myarchive.util.MIGRATION_1_2
 
-@Database(entities = [User::class, Planet::class, PDetail::class], version =  2)
+@Database(entities = [User::class, Planet::class, PDetail::class], version = 2)
 abstract class ArchiveDatabase : RoomDatabase() {
-    abstract fun userDao() :UserDao
-    abstract fun planetDao() :PlanetDAO
-    abstract fun pdetailDAO() :PDetailDAO
+    abstract fun userDao(): UserDao
+    abstract fun planetDao(): PlanetDAO
+    abstract fun pdetailDAO(): PDetailDAO
 
     companion object {
-        @Volatile private var instance: ArchiveDatabase ?= null
+        @Volatile private var instance: ArchiveDatabase? = null
         private val LOCK = Any()
 
-        fun buildDatabase(context: Context) = Room.databaseBuilder(
-            context.applicationContext, ArchiveDatabase::class.java, DB_NAME
-        ).createFromAsset("database/archive.db").addMigrations(MIGRATION_1_2).build()
+        fun buildDatabase(context: Context): ArchiveDatabase {
+            return Room.databaseBuilder(
+                context.applicationContext,
+                ArchiveDatabase::class.java, DB_NAME
+            )
+                .createFromAsset("database/myarchives.db")
+                .addMigrations(MIGRATION_1_2)
+                .build()
+        }
     }
 
-    operator fun invoke(context: Context) {
-        if(instance!=null) {
-            synchronized(LOCK) {
-                instance ?: buildDatabase(context).also {
-                    instance = it
-                }
-            }
+    operator fun invoke(context: Context): ArchiveDatabase {
+        return instance ?: synchronized(LOCK) {
+            instance ?: buildDatabase(context).also { instance = it }
         }
     }
 }
