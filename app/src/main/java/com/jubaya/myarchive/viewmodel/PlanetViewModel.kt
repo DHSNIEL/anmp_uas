@@ -7,14 +7,11 @@ import androidx.room.Room
 
 import com.jubaya.myarchive.model.ArchiveDatabase
 import com.jubaya.myarchive.model.Planet
-import com.jubaya.myarchive.model.User
 import com.jubaya.myarchive.util.buildDb
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
 class PlanetViewModel(application: Application) : AndroidViewModel(application), CoroutineScope {

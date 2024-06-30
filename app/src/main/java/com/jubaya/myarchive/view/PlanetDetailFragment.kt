@@ -1,7 +1,6 @@
 package com.jubaya.myarchive.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +8,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.jubaya.myarchive.R
-import com.jubaya.myarchive.databinding.FragmentHomeBinding
 import com.jubaya.myarchive.databinding.FragmentPlanetDetailBinding
-import com.jubaya.myarchive.model.Global
 import com.jubaya.myarchive.model.PDetail
 import com.jubaya.myarchive.viewmodel.DetailViewModel
-import com.jubaya.myarchive.viewmodel.ProfileViewModel
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.lang.Exception

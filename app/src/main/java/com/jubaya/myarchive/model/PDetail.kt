@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 @Entity(
     tableName = "planetdetails",
@@ -15,14 +14,13 @@ import com.google.gson.annotations.SerializedName
         childColumns = ["planet_id"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(value = ["planet_id"])]
+    indices = [Index("planet_id")]
 )
 data class PDetail(
-    @ColumnInfo(name = "detail")
-    var detail:String?,
-    @ColumnInfo(name = "planet_id")
-    var planet_id:Int,
-){
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-}
+    val id: Int,
+    val detail: String,
+    @ColumnInfo(name = "planet_id")
+    val planetId: Int
+)
+

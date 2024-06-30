@@ -1,23 +1,14 @@
 package com.jubaya.myarchive.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.jubaya.myarchive.model.User
 import com.jubaya.myarchive.util.buildDb
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import java.util.Objects
 import kotlin.coroutines.CoroutineContext
 
 class ProfileViewModel(application:Application):AndroidViewModel(application), CoroutineScope {

@@ -19,6 +19,8 @@ import com.google.gson.annotations.SerializedName
 //    indices = [Index(value = ["author_id"])]
 )
 data class Planet(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int,
     @ColumnInfo(name = "name")
     var name:String?,
     @ColumnInfo(name = "summary")
@@ -26,6 +28,5 @@ data class Planet(
     @ColumnInfo(name = "img_url")
     var img_url:String?,
 ){
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+
 }

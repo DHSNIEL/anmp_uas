@@ -1,9 +1,6 @@
 package com.jubaya.myarchive.view
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,18 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import com.jubaya.myarchive.R
 import com.jubaya.myarchive.databinding.FragmentProfileBinding
 import com.jubaya.myarchive.model.Global
 import com.jubaya.myarchive.model.User
 import com.jubaya.myarchive.viewmodel.ProfileViewModel
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 
 
 class ProfileFragment : Fragment(), UserUpdate {
@@ -42,6 +35,8 @@ class ProfileFragment : Fragment(), UserUpdate {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.user = User(0, "", "", "", "", "", "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg", 0)
 
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         viewModel.fetch(Global.userid)
