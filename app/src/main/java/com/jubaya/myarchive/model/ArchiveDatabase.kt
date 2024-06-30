@@ -19,7 +19,7 @@ abstract class ArchiveDatabase : RoomDatabase() {
 
         fun buildDatabase(context: Context) = Room.databaseBuilder(
             context.applicationContext, ArchiveDatabase::class.java, DB_NAME
-        ).addMigrations(MIGRATION_1_2).build()
+        ).createFromAsset("database/archive.db").addMigrations(MIGRATION_1_2).build()
     }
 
     operator fun invoke(context: Context) {

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(
-    tableName = "PDetail",
+    tableName = "planetdetails",
     foreignKeys = [ForeignKey(
         entity = Planet::class,
         parentColumns = ["id"],

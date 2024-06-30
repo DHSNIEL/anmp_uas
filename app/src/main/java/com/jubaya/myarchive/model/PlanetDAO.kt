@@ -8,10 +8,10 @@ interface PlanetDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll (vararg planet:Planet)
 
-    @Query("SELECT * FROM Planet")
+    @Query("SELECT * FROM planets")
     fun selectAll(): List<Planet>
 
-    @Query("SELECT * FROM Planet WHERE id=:id")
+    @Query("SELECT * FROM planets WHERE id=:id")
     fun selectPlanet(id:Int): Planet
 
     @Delete

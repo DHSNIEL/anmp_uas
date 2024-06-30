@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity
-//    (
-//    tableName = "Planet",
+    (
+        tableName = "planets",
 //    foreignKeys = [ForeignKey(
 //        entity = User::class,
 //        parentColumns = ["id"],
@@ -17,7 +17,7 @@ import com.google.gson.annotations.SerializedName
 //        onDelete = ForeignKey.CASCADE
 //    )],
 //    indices = [Index(value = ["author_id"])]
-//)
+)
 data class Planet(
     @ColumnInfo(name = "name")
     var name:String?,
