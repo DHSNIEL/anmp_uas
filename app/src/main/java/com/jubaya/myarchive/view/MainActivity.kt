@@ -37,6 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, binding.drawerLayout)
-                || super.onSupportNavigateUp()
+                || super.onSupportNavigateUp() // should navController and binding.drawerLayout be deleted?
     }
 }

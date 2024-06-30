@@ -9,7 +9,6 @@ import androidx.room.Update
 
 @Dao
 interface UserDao {
-
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertAll(vararg user: User)
 
