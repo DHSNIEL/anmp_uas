@@ -2,5 +2,5 @@ package com.jubaya.myarchive.model
 
 object Global {
     var darkMode = false
-    var userid = 0
+    var userid = 1
 }

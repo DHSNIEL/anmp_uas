@@ -1,12 +1,32 @@
 package com.jubaya.myarchive.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-data class Planet(
-    var id:String?,
-    var name:String?,
-    var summary:String?,
-    var img_url:String?,
-    @SerializedName("username")
-    var authorname:String?,
+@Entity
+    (
+        tableName = "planets",
+//    foreignKeys = [ForeignKey(
+//        entity = User::class,
+//        parentColumns = ["id"],
+//        childColumns = ["author_id"],
+//        onDelete = ForeignKey.CASCADE
+//    )],
+//    indices = [Index(value = ["author_id"])]
 )
+data class Planet(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int,
+    @ColumnInfo(name = "name")
+    var name:String?,
+    @ColumnInfo(name = "summary")
+    var summary:String?,
+    @ColumnInfo(name = "img_url")
+    var img_url:String?,
+){
+
+}

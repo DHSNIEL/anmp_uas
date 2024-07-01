@@ -1,6 +1,7 @@
 package com.jubaya.myarchive.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +16,12 @@ import com.jubaya.myarchive.viewmodel.PlanetViewModel
 class HomeFragment : Fragment() {
     private lateinit var binding:FragmentHomeBinding
     private lateinit var viewModel:PlanetViewModel
-    private val planetListAdapter = PlanetListAdapter(arrayListOf())
+    private val adapter = PlanetListAdapter(arrayListOf())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -33,9 +33,11 @@ class HomeFragment : Fragment() {
         viewModel.refresh()
 
         binding.recView.layoutManager = LinearLayoutManager(context)
-        binding.recView.adapter = planetListAdapter
+        binding.recView.adapter = adapter
 
         observeViewModel()
+
+        Log.d("HomeFragment", "RecyclerView Adapter set: ${binding.recView.adapter}")
 
         binding.refreshlayout.setOnRefreshListener {
             viewModel.refresh()
@@ -48,18 +50,17 @@ class HomeFragment : Fragment() {
 
     fun observeViewModel(){
         viewModel.planetsLD.observe(viewLifecycleOwner, Observer {
-            planetListAdapter.updatePlanetList(it)
+            Log.d("HomeFragment", "Planets updated: $it")
+            adapter.updatePlanetList(it)
         })
 
         viewModel.planetLoadErrorLD.observe(viewLifecycleOwner, Observer {
-            if (it == true){
-                binding.txtError.visibility = View.VISIBLE
-            }else{
-                binding.txtError.visibility = View.GONE
-            }
+            Log.e("HomeFragment", "Error loading planets: $it")
+            binding.txtError.visibility = if (it == true) View.VISIBLE else View.GONE
         })
 
         viewModel.loadingLD.observe(viewLifecycleOwner, Observer {
+            Log.d("HomeFragment", "Loading state changed: $it")
             if (it == true){
                 binding.progressLoad.visibility = View.VISIBLE
                 binding.recView.visibility = View.GONE

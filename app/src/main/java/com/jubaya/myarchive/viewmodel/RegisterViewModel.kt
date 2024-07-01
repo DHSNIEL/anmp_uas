@@ -2,63 +2,78 @@ package com.jubaya.myarchive.viewmodel
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import org.json.JSONObject
+import com.jubaya.myarchive.model.User
+import com.jubaya.myarchive.model.UserDao
+import com.jubaya.myarchive.util.buildDb
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-class RegisterViewModel(application: Application): AndroidViewModel(application) {
-    val registerMsgLD = MutableLiveData<String>()
+class RegisterViewModel(application: Application) : AndroidViewModel(application), CoroutineScope {
+    val registerLD = MutableLiveData<List<User>>()
+    val regLoadingErrorLD = MutableLiveData<Boolean>()
+    val loadingLD = MutableLiveData<Boolean>()
+    val registerSuccess = MutableLiveData<Boolean>()
+    private val job = Job()
 
-    val TAG = "volleyTag"
-    private var q: RequestQueue? = null
+    override val coroutineContext = Dispatchers.IO + job
 
-    fun register(username:String, firstname:String, lastname:String, email:String, password:String, img_url:String){
-        q = Volley.newRequestQueue(getApplication())
-        val url = "https://anmpprojects.000webhostapp.com/register.php"
+    private val userDao: UserDao by lazy {
+        val db = buildDb(application)
+        db.userDao()
+    }
 
-        val stringRequest = object : StringRequest(
-            Request.Method.POST, url,
-            { response ->
+    fun register(user: User) {
+        loadingLD.value = true
+        regLoadingErrorLD.value = false
 
-                val jsonObject = JSONObject(response)
-                Log.d("RES", jsonObject.getString("result"))
-                if (jsonObject.getString("result") == "OK") {
-
-                    registerMsgLD.value = "Registration is Successful"
-
-                } else {
-
-                    registerMsgLD.value = "Registration Failed. Please Try Again"
-
-                }
-            },
-            { error ->
-                // Handle error
-                Log.e("RegistrationError", error.printStackTrace().toString())
-            }) {
-                override fun getParams(): MutableMap<String, String> {
-                    val params = HashMap<String, String>()
-                    params["username"] = username
-                    params["firstname"] = firstname
-                    params["lastname"] = lastname
-                    params["email"] = email
-                    params["password"] = password
-                    params["img_url"] = img_url
-                    return params
-                }
+        launch {
+            try {
+                userDao.insertAll(user)
+                registerSuccess.postValue(true)
+                Log.d("RegisterViewModel", "User registered successfully: ${user.username}")
+            } catch (e: Exception) {
+                Log.e("RegisterViewModel", "Error during registration: ${e.message}", e)
+                registerSuccess.postValue(false)
+            } finally {
+                loadingLD.postValue(false)
             }
+        }
+    }
 
-        stringRequest.tag = TAG
-        q?.add(stringRequest)
+    fun refresh() {
+        loadingLD.value = true
+        regLoadingErrorLD.value = false
+
+        launch {
+            try {
+                val users = userDao.selectAllUser()
+                registerLD.postValue(users)
+            } catch (e: Exception) {
+                regLoadingErrorLD.postValue(true)
+                Log.e("RegisterViewModel", "Error during refresh: ${e.message}", e)
+            } finally {
+                loadingLD.postValue(false)
+            }
+        }
+    }
+
+    fun updateDone(user: User) {
+        launch {
+            try {
+                userDao.updateUser(user)
+                Log.d("RegisterViewModel", "User updated successfully: ${user.username}")
+            } catch (e: Exception) {
+                Log.e("RegisterViewModel", "Error during update: ${e.message}", e)
+            }
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
-        q?.cancelAll(TAG)
+        job.cancel()
     }
 }

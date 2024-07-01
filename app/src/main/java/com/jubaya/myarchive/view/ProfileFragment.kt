@@ -1,9 +1,6 @@
 package com.jubaya.myarchive.view
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,22 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.jubaya.myarchive.R
 import com.jubaya.myarchive.databinding.FragmentProfileBinding
 import com.jubaya.myarchive.model.Global
+import com.jubaya.myarchive.model.User
 import com.jubaya.myarchive.viewmodel.ProfileViewModel
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), UserUpdate {
     private lateinit var binding:FragmentProfileBinding
     private lateinit var viewModel:ProfileViewModel
     var message = ""
+    private lateinit var user: User
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,8 +36,10 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.user = User(0, "", "", "", "", "", "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg", 0)
+
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        viewModel.refresh(Global.userid.toString())
+        viewModel.fetch(Global.userid)
 
         val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
 
@@ -53,16 +51,18 @@ class ProfileFragment : Fragment() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24)
 
-        observeViewModel()
+        binding.listener = this
 
         binding.btnLogOut.setOnClickListener {
             goToLoginPage()
         }
+
+        observeViewModel()
     }
 
     fun observeViewModel(){
         viewModel.userLD.observe(viewLifecycleOwner, Observer {
-            var user = it
+            /*var user = it
 
             binding.txtFirst.setText(it.firstname)
             binding.txtLast.setText(it.lastname)
@@ -92,8 +92,9 @@ class ProfileFragment : Fragment() {
                     Log.e("picasso_error", e.toString())
                 }
             }
-            )
+            )*/
 
+            binding.user = it
         })
     }
 
@@ -112,5 +113,16 @@ class ProfileFragment : Fragment() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         requireActivity().finish()
+    }
+
+    override fun onUserUpdateClick(v: View) {
+        if (binding.txtNewPass.text.toString() == binding.txtConfPass.text.toString()){
+            if (binding.txtNewPass.text.toString() != ""){
+                binding.user!!.password == binding.txtNewPass.text.toString()
+            }
+
+            viewModel.update(binding.user!!)
+            Toast.makeText(context, "Profile Updated!", Toast.LENGTH_SHORT).show()
+        }
     }
 }

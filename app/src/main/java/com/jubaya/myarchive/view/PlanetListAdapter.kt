@@ -4,22 +4,34 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.jubaya.myarchive.R
 import com.jubaya.myarchive.databinding.PlanetListItemBinding
 import com.jubaya.myarchive.model.Planet
 import com.jubaya.myarchive.viewmodel.PlanetViewModel
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import java.net.URL
 
 class PlanetListAdapter(val planetList:ArrayList<Planet>)
-    : RecyclerView.Adapter<PlanetListAdapter.PlanetViewHolder>(){
+    : RecyclerView.Adapter<PlanetListAdapter.PlanetViewHolder>(), PlanetDetailClickListener {
     class PlanetViewHolder(var binding:PlanetListItemBinding)
-        :RecyclerView.ViewHolder(binding.root)
+        :RecyclerView.ViewHolder(binding.root){
+        fun bind(planet: Planet){
+            binding.planet = planet
+            Picasso.get()
+                .load(planet.img_url)
+                .into(binding.imgPlanet)
+
+            binding.executePendingBindings()
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanetViewHolder {
         val binding = PlanetListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
         return PlanetViewHolder(binding)
     }
 
@@ -28,37 +40,20 @@ class PlanetListAdapter(val planetList:ArrayList<Planet>)
     }
 
     override fun onBindViewHolder(holder: PlanetViewHolder, position: Int) {
-        holder.binding.txtName.text = planetList[position].name
-        holder.binding.txtAuthor.text = "@" + planetList[position].authorname
-        holder.binding.txtDetail.text = planetList[position].summary
-        holder.binding.btnRead.setOnClickListener {
-            val action = HomeFragmentDirections.actionHometoDetail(planetList[position].id.toString())
-            Navigation.findNavController(it).navigate(action)
-        }
-
-        val picasso = Picasso.Builder(holder.itemView.context)
-        picasso.listener { picasso, uri, exception ->
-            exception.printStackTrace()
-        }
-        picasso.build().load(planetList[position].img_url).into(holder.binding.imgPlanet, object:
-            Callback {
-            override fun onSuccess() {
-                holder.binding.progressImage.visibility = View.INVISIBLE
-                holder.binding.imgPlanet.visibility = View.VISIBLE
-            }
-
-            override fun onError(e: Exception?) {
-                Log.e("picasso_error", e.toString())
-            }
-        }
-        )
-
+        holder.bind(planetList[position])
+        holder.binding.detailListener = this
     }
 
-    fun updatePlanetList(newStudentList:ArrayList<Planet>){
+    fun updatePlanetList(newPlanets: List<Planet>){
         planetList.clear()
-        planetList.addAll(newStudentList)
+        planetList.addAll(newPlanets)
 
         notifyDataSetChanged()
+    }
+
+    override fun onPlanetDetailClick(v: View) {
+        val id = v.tag.toString()
+        val action = HomeFragmentDirections.actionHometoDetail(id)
+        Navigation.findNavController(v).navigate(action)
     }
 }

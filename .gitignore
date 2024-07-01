@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+.idea/deploymentTargetDropDown.xml
+.idea/discord.xml
+.idea/gradle.xml
+.idea/migrations.xml
