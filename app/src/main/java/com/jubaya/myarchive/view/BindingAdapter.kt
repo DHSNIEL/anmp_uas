@@ -11,9 +11,9 @@ import com.squareup.picasso.Picasso
 import java.lang.Exception
 
 @BindingAdapter("android:imageUrl")
-fun loadPhoto(imageView: ImageView, url:String) {
+fun loadPhoto(imageView: ImageView, url:String?) {
     val picasso = Picasso.Builder(imageView.context)
-    picasso.listener { picasso, uri, exception ->
+    picasso.listener { _, _, exception ->
         exception.printStackTrace()
     }
 
@@ -35,5 +35,5 @@ fun loadPhoto(imageView: ImageView, url:String) {
         })
         //picasso.build().load(url).into(imageView)
     }
-    Log.d("bindingadapter", "cek "+url)
+    Log.d("bindingadapter", "cek "+ url)
 }

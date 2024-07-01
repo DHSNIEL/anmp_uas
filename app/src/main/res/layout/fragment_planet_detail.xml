@@ -11,6 +11,9 @@
         <variable
             name="planet"
             type="com.jubaya.myarchive.model.Planet" />
+        <variable
+            name="viewModel"
+            type="com.jubaya.myarchive.viewmodel.DetailViewModel" />
     </data>
 
     <FrameLayout
@@ -50,7 +53,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:scaleType="centerCrop"
-                            android:imageUrl="@{planet.img_url}"
+                            android:imageUrl="@{viewModel.planetLD.img_url}"
                             android:src="@drawable/ic_launcher_foreground"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +66,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="16dp"
                             android:fontFamily="@font/rammetto_one"
-                            android:text="@{planet.name}"
+                            android:text="@{viewModel.planetLD.name}"
                             android:textAlignment="viewStart"
                             android:textSize="19sp"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +92,7 @@
                             android:layout_marginTop="24dp"
                             android:layout_marginEnd="16dp"
                             android:fontFamily="@font/alike_angular"
-                            android:text="@{pdetail.detail}"
+                            android:text="@{viewModel.detailsLD[0].detail}"
                             android:textSize="16sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

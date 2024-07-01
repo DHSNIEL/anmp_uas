@@ -2,6 +2,7 @@ package com.jubaya.myarchive.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.jubaya.myarchive.model.ArchiveDatabase
@@ -25,8 +26,6 @@ class DetailViewModel(application: Application): AndroidViewModel(application), 
         getApplication(),
         ArchiveDatabase::class.java, "newplanetdb"
     ).build()
-//    val TAG = "volleyTag"
-//    private var queue: RequestQueue? = null
 
     fun refresh(id:String){
         launch{
@@ -36,9 +35,10 @@ class DetailViewModel(application: Application): AndroidViewModel(application), 
                 if(planet != null){
                     planetLD.postValue(planet)
                     val details = db.pdetailDAO().selectDetailsByPlanetId(planet.id)
-                    details.observeForever{ detailList ->
-                        detailsLD.postValue(detailList)
-                    }
+                    detailsLD.postValue(details)
+//                    details.observeForever{ detailList ->
+//                        detailsLD.postValue(detailList)
+//                    }
                 }else{
                     planetLD.postValue(null)
                     detailsLD.postValue(emptyList())

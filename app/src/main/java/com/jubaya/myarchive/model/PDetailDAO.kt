@@ -7,5 +7,5 @@ import androidx.room.Query
 @Dao
 interface PDetailDAO {
     @Query("SELECT * FROM planetdetails WHERE planet_id = :planetId")
-    fun selectDetailsByPlanetId(planetId: Int): LiveData<List<PDetail>>
+    fun selectDetailsByPlanetId(planetId: Int): List<PDetail>
 }

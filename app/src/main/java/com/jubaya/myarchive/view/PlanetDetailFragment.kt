@@ -1,5 +1,6 @@
 package com.jubaya.myarchive.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,7 +23,6 @@ class PlanetDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentPlanetDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -39,62 +39,24 @@ class PlanetDetailFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
         viewModel.refresh(id)
+// hmmm
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         observeViewModel()
 
     }
 
-    fun observeViewModel() {
+    private fun observeViewModel() {
         viewModel.planetLD.observe(viewLifecycleOwner, Observer { planet ->
             planet?.let {
                 (requireActivity() as AppCompatActivity).supportActionBar?.title = " " + it.name
-                binding.txtName.text = it.name
-                binding.txtAuthor.text = "testHelloWorld"
-
-                Picasso.get()
-                    .load(it.img_url)
-                    .into(binding.imgPlanet, object : Callback {
-                        override fun onSuccess() {
-                            binding.progressImage.visibility = View.INVISIBLE
-                            binding.imgPlanet.visibility = View.VISIBLE
-                        }
-
-                        override fun onError(e: Exception?) {
-                            print(e.toString())
-                        }
-                    })
             }
-            /*var planet = it
-
-            (requireActivity() as AppCompatActivity).supportActionBar?.title = " " + it.name
-            //activity?.title = it.name
-
-            binding.txtName.text = it.name
-            binding.txtAuthor.text = "@" + it.authorname
-
-            val picasso = Picasso.Builder(requireContext())
-            picasso.listener { picasso, uri, exception ->
-                exception.printStackTrace()
-            }
-
-            picasso.build().load(it.img_url).into(binding.imgPlanet, object:
-                Callback {
-                override fun onSuccess() {
-                    binding.progressImage.visibility = View.INVISIBLE
-                    binding.imgPlanet.visibility = View.VISIBLE
-                }
-
-                override fun onError(e: Exception?) {
-                    Log.e("picasso_error", e.toString())
-                }
-            }
-            )*/
-
         })
 
-        viewModel.detailsLD.observe(viewLifecycleOwner, Observer { details->
+        viewModel.detailsLD.observe(viewLifecycleOwner, Observer { details ->
             details?.let {
-                if(details.isNotEmpty()){
+                if (details.isNotEmpty()) {
                     var position = 0
                     updateDetail(position, details)
 
@@ -110,33 +72,110 @@ class PlanetDetailFragment : Fragment() {
                             updateDetail(position, details)
                         }
                     }
-                }else{
+                } else {
                     binding.txtDetail.text = "No details available"
                     binding.txtPage.text = "0/0"
                     binding.btnPrev.visibility = View.INVISIBLE
                     binding.btnNext.visibility = View.INVISIBLE
                 }
             }
-/*            val detail = it
-//            var position = 0
-//
-//            updateDetail(position, detail)
-//
-//            binding.btnNext.setOnClickListener {
-//                if (position < detail.size - 1) {
-//                    position += 1
-//                    updateDetail(position, detail)
-//                }
-//            }
-//
-//            binding.btnPrev.setOnClickListener {
-//                if (position > 0) {
-//                    position -= 1
-//                    updateDetail(position, detail)
-//                }
-//            }*/
         })
     }
+
+//    @SuppressLint("SetTextI18n")
+//    fun observeViewModel() {
+//        viewModel.planetLD.observe(viewLifecycleOwner, Observer { planet ->
+//            planet?.let {
+//                (requireActivity() as AppCompatActivity).supportActionBar?.title = " " + it.name
+//                binding.txtName.text = it.name
+//                binding.txtAuthor.text = "testHelloWorld"
+//
+//                Picasso.get()
+//                    .load(it.img_url)
+//                    .into(binding.imgPlanet, object : Callback {
+//                        override fun onSuccess() {
+//                            binding.progressImage.visibility = View.INVISIBLE
+//                            binding.imgPlanet.visibility = View.VISIBLE
+//                        }
+//
+//                        override fun onError(e: Exception?) {
+//                            print(e.toString())
+//                        }
+//                    })
+//            }
+//            /*var planet = it
+//
+//            (requireActivity() as AppCompatActivity).supportActionBar?.title = " " + it.name
+//            //activity?.title = it.name
+//
+//            binding.txtName.text = it.name
+//            binding.txtAuthor.text = "@" + it.authorname
+//
+//            val picasso = Picasso.Builder(requireContext())
+//            picasso.listener { picasso, uri, exception ->
+//                exception.printStackTrace()
+//            }
+//
+//            picasso.build().load(it.img_url).into(binding.imgPlanet, object:
+//                Callback {
+//                override fun onSuccess() {
+//                    binding.progressImage.visibility = View.INVISIBLE
+//                    binding.imgPlanet.visibility = View.VISIBLE
+//                }
+//
+//                override fun onError(e: Exception?) {
+//                    Log.e("picasso_error", e.toString())
+//                }
+//            }
+//            )*/
+//
+//        })
+//
+//        viewModel.detailsLD.observe(viewLifecycleOwner, Observer { details->
+//            details?.let {
+//                if(details.isNotEmpty()){
+//                    var position = 0
+//                    updateDetail(position, details)
+//
+//                    binding.btnNext.setOnClickListener {
+//                        if (position < details.size - 1) {
+//                            position++
+//                            updateDetail(position, details)
+//                        }
+//                    }
+//                    binding.btnPrev.setOnClickListener {
+//                        if (position > 0) {
+//                            position--
+//                            updateDetail(position, details)
+//                        }
+//                    }
+//                }else{
+//                    binding.txtDetail.text = "No details available"
+//                    binding.txtPage.text = "0/0"
+//                    binding.btnPrev.visibility = View.INVISIBLE
+//                    binding.btnNext.visibility = View.INVISIBLE
+//                }
+//            }
+///*            val detail = it
+////            var position = 0
+////
+////            updateDetail(position, detail)
+////
+////            binding.btnNext.setOnClickListener {
+////                if (position < detail.size - 1) {
+////                    position += 1
+////                    updateDetail(position, detail)
+////                }
+////            }
+////
+////            binding.btnPrev.setOnClickListener {
+////                if (position > 0) {
+////                    position -= 1
+////                    updateDetail(position, detail)
+////                }
+////            }*/
+//        })
+//    }
     private fun updateDetail(position: Int, details: List<PDetail>) {
         binding.txtDetail.text = details[position].detail
         val page = position + 1
