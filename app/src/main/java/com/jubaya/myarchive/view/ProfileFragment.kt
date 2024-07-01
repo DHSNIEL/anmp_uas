@@ -70,19 +70,15 @@ class ProfileFragment : Fragment() {
             binding.txtUsername.text = it.username
 
             binding.btnUpdate.setOnClickListener {
-                viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
                 viewModel.update(Global.userid.toString(), binding.txtFirst.text.toString(),
                     binding.txtLast.text.toString(), binding.txtNewPass.text.toString())
-
-                observeUpdateViewModel()
             }
 
             val picasso = Picasso.Builder(requireContext())
             picasso.listener { picasso, uri, exception ->
-                exception.printStackTrace()
+                exception?.printStackTrace()
             }
-            picasso.build().load(it.img_url).into(binding.imgProfile, object:
-                Callback {
+            picasso.build().load(it.img_url).into(binding.imgProfile, object : Callback {
                 override fun onSuccess() {
                     binding.progressImage.visibility = View.INVISIBLE
                     binding.imgProfile.visibility = View.VISIBLE
@@ -90,10 +86,9 @@ class ProfileFragment : Fragment() {
 
                 override fun onError(e: Exception?) {
                     Log.e("picasso_error", e.toString())
+                    // Tambahkan penanganan kesalahan sesuai kebutuhan Anda
                 }
-            }
-            )
-
+            })
         })
     }
 

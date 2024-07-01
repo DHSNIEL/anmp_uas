@@ -1,3 +1,4 @@
+// RegisterActivity.kt
 package com.jubaya.myarchive.view
 
 import android.content.Intent
@@ -7,68 +8,62 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.jubaya.myarchive.R
 import com.jubaya.myarchive.databinding.ActivityRegisterBinding
-import com.jubaya.myarchive.viewmodel.LoginViewModel
+import com.jubaya.myarchive.model.User
 import com.jubaya.myarchive.viewmodel.RegisterViewModel
-import org.json.JSONObject
-import kotlin.math.log
 
 class RegisterActivity : AppCompatActivity() {
-    private lateinit var binding:ActivityRegisterBinding
+    private lateinit var binding: ActivityRegisterBinding
     private lateinit var viewModel: RegisterViewModel
-    var message = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityRegisterBinding.inflate(layoutInflater)
-        setContentView(binding. root)
+        setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "My Archive"
 
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        binding.txtLog.setOnClickListener {
-            val intent = Intent(it.context, LoginActivity::class.java)
-            it.context.startActivity(intent)
-        }
+        viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
+
         binding.btnReg.setOnClickListener {
-            if(binding.txtUsername.text.toString() != "" && binding.txtFirst.text.toString() != "" &&
-                binding.txtLast.text.toString() != "" && binding.txtEmail.text.toString() != "" &&
-                binding.txtPass.text.toString() != "" && binding.txtConfPass.text.toString() != "" &&
-                binding.txtURL.text.toString() != ""){
+            if (binding.txtUsername.text.toString().isNotEmpty() && binding.txtPass.text.toString().isNotEmpty() &&
+                binding.txtFirst.text.toString().isNotEmpty() && binding.txtLast.text.toString().isNotEmpty() &&
+                binding.txtEmail.text.toString().isNotEmpty()) {
 
-                if (binding.txtPass.text.toString() == binding.txtConfPass.text.toString()){
+                val user = User(
+                    username = binding.txtUsername.text.toString(),
+                    firstname = binding.txtFirst.text.toString(),
+                    lastname = binding.txtLast.text.toString(),
+                    email = binding.txtEmail.text.toString(),
+                    password = binding.txtPass.text.toString(),
+                    img_url = "" // tambahkan logika untuk mengambil img_url jika diperlukan
+                )
 
-                    viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
-                    viewModel.register(binding.txtUsername.text.toString(), binding.txtFirst.text.toString(),
-                        binding.txtLast.text.toString(), binding.txtEmail.text.toString(),
-                        binding.txtPass.text.toString(), binding.txtURL.text.toString())
-
-                        observeViewModel()
-
-                    //Toast.makeText(this, "HI", Toast.LENGTH_SHORT).show()
-                }
-                else{
-                    Toast.makeText(this, "Password and Confirm Password is Not Matching", Toast.LENGTH_LONG).show()
-                }
-            } else{
-                Toast.makeText(this, "Please Fill All The Field", Toast.LENGTH_LONG).show()
+                viewModel.register(user)
+                observeViewModel()
+            } else {
+                Toast.makeText(this, "Please Fill All The Fields", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    fun observeViewModel(){
-        viewModel.registerMsgLD.observe(this, Observer {
-            message = it
-
-            Log.d("Msg", message)
-            Toast.makeText( this, message, Toast.LENGTH_LONG).show()
+    private fun observeViewModel() {
+        viewModel.registerSuccess.observe(this, Observer { isSuccess ->
+            if (isSuccess) {
+                Toast.makeText(this, "Registration Successful", Toast.LENGTH_LONG).show()
+                navigateToLogin()
+            } else {
+                Toast.makeText(this, "Registration Failed", Toast.LENGTH_LONG).show()
+            }
         })
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

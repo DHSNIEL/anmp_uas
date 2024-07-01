@@ -53,7 +53,7 @@ class PlanetDetailFragment : Fragment() {
             //activity?.title = it.name
 
             binding.txtName.text = it.name
-            binding.txtAuthor.text = "@" + it.authorname
+            //binding.txtAuthor.text = "@" + it.authorname
 
             val picasso = Picasso.Builder(requireContext())
             picasso.listener { picasso, uri, exception ->

@@ -2,56 +2,57 @@ package com.jubaya.myarchive.viewmodel
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import org.json.JSONObject
+import com.jubaya.myarchive.model.User
+import com.jubaya.myarchive.util.buildDb
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class LoginViewModel(application: Application): AndroidViewModel(application) {
-    val loginidLD = MutableLiveData<Int>()
+class LoginViewModel(application: Application) : AndroidViewModel(application), CoroutineScope {
+    val loginLD = MutableLiveData<User?>()
+    val loginLoadingErrorLD = MutableLiveData<Boolean>()
+    val loadingLD = MutableLiveData<Boolean>()
+    val loginSuccess = MutableLiveData<Boolean>()
 
-    val TAG = "volleyTag"
-    private var q: RequestQueue? = null
+    private var job = Job()
 
-    fun login(username:String, password:String){
-        q = Volley.newRequestQueue(getApplication())
-        val url = "https://anmpprojects.000webhostapp.com/login.php"
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
 
-        val stringRequest = object: StringRequest(
-            Request.Method.POST, url,
-            {
-                val obj = JSONObject(it)
-                if(obj.getString("result") == "OK") {
+    fun login(username: String, password: String) {
+        loadingLD.value = true
+        loginLoadingErrorLD.value = false
+        Log.d("LoginViewModel", "Starting login for username: $username")
 
-                    val data = obj.getInt("data")
-                    loginidLD.value = data
-
+        launch {
+            try {
+                val db = buildDb(getApplication())
+                val user = db.userDao().check(username, password)
+                if (user != null) {
+                    Log.d("LoginViewModel", "Login successful for username: $username")
+                    loginSuccess.postValue(true)
+                    loginLD.postValue(user)
                 } else {
-                    loginidLD.value = 0
+                    Log.d("LoginViewModel", "Login failed: user not found for username: $username")
+                    loginSuccess.postValue(false)
+                    loginLoadingErrorLD.postValue(true)
                 }
-            },
-            {
-                Log.e("apierror", it.printStackTrace().toString())
-            }
-        ){
-            override fun getParams(): MutableMap<String, String>? {
-                val params = HashMap<String, String>()
-                params["username"] = username
-                params["password"] = password
-                return params
+            } catch (e: Exception) {
+                Log.e("LoginViewModel", "Error during login for username: $username", e)
+                loginSuccess.postValue(false)
+                loginLoadingErrorLD.postValue(true)
+            } finally {
+                loadingLD.postValue(false)
             }
         }
-
-        stringRequest.tag = TAG
-        q?.add(stringRequest)
     }
 
     override fun onCleared() {
         super.onCleared()
-        q?.cancelAll(TAG)
+        job.cancel()  // Membatalkan semua coroutine ketika ViewModel dihancurkan
     }
 }

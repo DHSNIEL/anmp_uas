@@ -29,7 +29,7 @@ class PlanetListAdapter(val planetList:ArrayList<Planet>)
 
     override fun onBindViewHolder(holder: PlanetViewHolder, position: Int) {
         holder.binding.txtName.text = planetList[position].name
-        holder.binding.txtAuthor.text = "@" + planetList[position].authorname
+        //holder.binding.txtAuthor.text = "@" + planetList[position].authorname
         holder.binding.txtDetail.text = planetList[position].summary
         holder.binding.btnRead.setOnClickListener {
             val action = HomeFragmentDirections.actionHometoDetail(planetList[position].id.toString())

@@ -18,13 +18,11 @@ import com.jubaya.myarchive.viewmodel.ProfileViewModel
 import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var binding:ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding
     private lateinit var viewModel: LoginViewModel
-    var user_id = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -33,48 +31,45 @@ class LoginActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
+        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+
         binding.txtReg.setOnClickListener {
             val intent = Intent(it.context, RegisterActivity::class.java)
             it.context.startActivity(intent)
         }
 
         binding.btnLogin.setOnClickListener {
-            //Log.d("username", binding.txtUsername.text.toString())
-            //Log.d("pass", binding.txtPass.text.toString())
-
-            if (binding.txtUsername.text.toString() != "" && binding.txtPass.text.toString() != ""){
-
-                viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+            if (binding.txtUsername.text.toString().isNotEmpty() && binding.txtPass.text.toString().isNotEmpty()) {
                 viewModel.login(binding.txtUsername.text.toString(), binding.txtPass.text.toString())
-
                 observeViewModel()
-
-            }
-            else{
-                Toast.makeText(this, "Please Fill All The Field", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Please Fill All The Fields", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    fun observeViewModel(){
-        viewModel.loginidLD.observe(this, Observer {
-            user_id = it
-
-            Log.d("ID", user_id.toString())
-            if (user_id != 0){
-                Toast.makeText( this,"Welcome, " + binding.txtUsername.text, Toast.LENGTH_LONG).show()
-                updateList()
+    private fun observeViewModel() {
+        viewModel.loginSuccess.observe(this, Observer { isSuccess ->
+            if (isSuccess) {
+                Toast.makeText(this, "Welcome, ${binding.txtUsername.text}", Toast.LENGTH_LONG).show()
+                navigateToHome()
             } else {
-                Toast.makeText( this,"Login Failed. Username or Password is incorrect", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Login Failed. Username or Password is incorrect", Toast.LENGTH_LONG).show()
             }
+        })
+
+        viewModel.loadingLD.observe(this, Observer { isLoading ->
+            // Show or hide loading indicator based on isLoading value
+        })
+
+        viewModel.loginLoadingErrorLD.observe(this, Observer { hasError ->
+            // Show error message based on hasError value
         })
     }
 
-    fun updateList() {
-        Global.userid = user_id
+    private fun navigateToHome() {
         val intent = Intent(this, MainActivity::class.java)
-        finish()
-        //intent.putExtra(LoginActivity.idUser, get_id)
         startActivity(intent)
+        finish()
     }
 }
