@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jubaya.myarchive.R
 import com.jubaya.myarchive.databinding.FragmentHomeBinding
@@ -35,9 +36,14 @@ class HomeFragment : Fragment() {
         binding.recView.layoutManager = LinearLayoutManager(context)
         binding.recView.adapter = adapter
 
-        observeViewModel()
-
         Log.d("HomeFragment", "RecyclerView Adapter set: ${binding.recView.adapter}")
+
+        adapter.setOnItemClickListener{ planet ->
+            val action = HomeFragmentDirections.actionHometoDetail(planet.id.toString())
+            findNavController().navigate(action)
+        }
+
+        observeViewModel()
 
         binding.refreshlayout.setOnRefreshListener {
             viewModel.refresh()
@@ -47,6 +53,8 @@ class HomeFragment : Fragment() {
             binding.refreshlayout.isRefreshing = false
         }
     }
+
+
 
     fun observeViewModel(){
         viewModel.planetsLD.observe(viewLifecycleOwner, Observer {

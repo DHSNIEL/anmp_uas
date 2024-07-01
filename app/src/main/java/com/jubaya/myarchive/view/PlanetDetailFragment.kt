@@ -94,20 +94,27 @@ class PlanetDetailFragment : Fragment() {
 
         viewModel.detailsLD.observe(viewLifecycleOwner, Observer { details->
             details?.let {
-                var position = 0
-                updateDetail(position, details)
+                if(details.isNotEmpty()){
+                    var position = 0
+                    updateDetail(position, details)
 
-                binding.btnNext.setOnClickListener{
-                    if(position < details.size - 1){
-                        position++
-                        updateDetail(position, details)
+                    binding.btnNext.setOnClickListener {
+                        if (position < details.size - 1) {
+                            position++
+                            updateDetail(position, details)
+                        }
                     }
-                }
-                binding.btnPrev.setOnClickListener{
-                    if(position > 0){
-                        position--
-                        updateDetail(position, details)
+                    binding.btnPrev.setOnClickListener {
+                        if (position > 0) {
+                            position--
+                            updateDetail(position, details)
+                        }
                     }
+                }else{
+                    binding.txtDetail.text = "No details available"
+                    binding.txtPage.text = "0/0"
+                    binding.btnPrev.visibility = View.INVISIBLE
+                    binding.btnNext.visibility = View.INVISIBLE
                 }
             }
 /*            val detail = it

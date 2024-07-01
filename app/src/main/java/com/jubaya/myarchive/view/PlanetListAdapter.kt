@@ -18,10 +18,12 @@ import java.net.URL
 
 class PlanetListAdapter(val planetList:ArrayList<Planet>)
     : RecyclerView.Adapter<PlanetListAdapter.PlanetViewHolder>(), PlanetDetailClickListener {
+        private var onItemClickListener: ((Planet)-> Unit)? = null
     class PlanetViewHolder(var binding:PlanetListItemBinding)
         :RecyclerView.ViewHolder(binding.root){
-        fun bind(planet: Planet){
+        fun bind(planet: Planet, clickListener: PlanetDetailClickListener){
             binding.planet = planet
+            binding.detailListener = clickListener
             Picasso.get()
                 .load(planet.img_url)
                 .into(binding.imgPlanet)
@@ -40,8 +42,8 @@ class PlanetListAdapter(val planetList:ArrayList<Planet>)
     }
 
     override fun onBindViewHolder(holder: PlanetViewHolder, position: Int) {
-        holder.bind(planetList[position])
-        holder.binding.detailListener = this
+        holder.bind(planetList[position], this)
+        //holder.binding.detailListener = this
     }
 
     fun updatePlanetList(newPlanets: List<Planet>){
@@ -51,9 +53,15 @@ class PlanetListAdapter(val planetList:ArrayList<Planet>)
         notifyDataSetChanged()
     }
 
+    fun setOnItemClickListener(listener: (Planet)-> Unit){
+        onItemClickListener = listener
+    }
+
     override fun onPlanetDetailClick(v: View) {
-        val id = v.tag.toString()
-        val action = HomeFragmentDirections.actionHometoDetail(id)
-        Navigation.findNavController(v).navigate(action)
+        val planet = v.tag as Planet
+        onItemClickListener?.invoke(planet)
+//        val id = v.tag.toString()
+//        val action = HomeFragmentDirections.actionHometoDetail(id)
+//        Navigation.findNavController(v).navigate(action)
     }
 }

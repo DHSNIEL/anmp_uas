@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.jubaya.myarchive.util.DB_NAME
 import com.jubaya.myarchive.util.MIGRATION_1_2
+import com.jubaya.myarchive.util.MIGRATION_2_3
 
 @Database(entities = [User::class, Planet::class, PDetail::class], version = 2, exportSchema = true)
 abstract class ArchiveDatabase : RoomDatabase() {
